@@ -1,0 +1,123 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "clusterName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name for AKS cluster."
+            }
+        },
+        "clusterDNS": {
+            "type": "string",
+            "metadata": {
+                "description": "AKS cluster DNS prefix."
+            }
+        },
+        "registryName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the Azure container registry."
+            }
+        },
+        "linuxAdminUsername": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "servicePrincipalID": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Service principal ID."
+            }
+        },
+        "servicePrincipalPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Service principal secret password."
+            }
+        },
+        "agentPoolName": {
+            "type": "string",
+            "metadata": {
+                "description": "Unique agent pool name"
+            }
+        },
+        "_artifactsLocation": {
+            "type": "string",
+            "metadata": {
+                "description": "The base URI where artifacts required by this template are located."
+            }
+        },
+        "_artifactsLocationSasToken": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Uniquely generated SAS token for accesing artifacts within that location."
+            }
+        },
+        "sshKey": {
+            "type": "string",
+            "metadata": {
+                "description": "SSH key for Linux node authentication."
+            }
+        }
+    },
+    "variables": {
+        "registryName": "[concat(parameters('registryName'), uniqueString(resourceGroup().id))]"
+    },
+    "resources": [
+        {
+            "name": "[parameters('clusterName')]",
+            "type": "Microsoft.ContainerService/managedClusters",
+            "apiVersion": "2020-02-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "kubernetesVersion": "1.17.13",
+                "dnsPrefix": "[parameters('clusterDNS')]",
+                "agentPoolProfiles": [
+                    {
+                        "name": "[parameters('agentPoolName')]",
+                        "count": 1,
+                        "vmSize": "Standard_a2_v2",
+                        "osType": "Linux",
+                        "storageProfile": "ManagedDisks"
+                    }
+                ],
+                "linuxProfile": {
+                    "adminUsername": "[parameters('linuxAdminUsername')]",
+                    "ssh": {
+                        "publicKeys": [
+                            {
+                                "keyData": "[parameters('sshKey')]"
+                            }
+                        ]
+                    }
+                },
+                "enableRBAC": true,
+                "servicePrincipalProfile": {
+                    "clientId": "[parameters('servicePrincipalID')]",
+                    "secret": "[parameters('servicePrincipalPassword')]"
+                }
+            }
+        },
+        {
+            "name": "[variables('registryName')]",
+            "type": "Microsoft.ContainerRegistry/registries",
+            "apiVersion": "2019-05-01",
+            "dependsOn": [
+                "[resourceId('Microsoft.ContainerService/managedClusters', parameters('clusterName'))]"
+            ],
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Basic",
+                "tier": "Basic"
+            },
+            "properties": {
+                "adminUserEnabled": true
+            }
+        }
+    ],
+    "outputs": {
+    }
+}

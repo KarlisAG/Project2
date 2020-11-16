@@ -1,0 +1,30 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "clusterName": {
+            "value": "akscluster"
+        },
+        "clusterDNS": {
+            "value": "projectClusterDNS"
+        },
+        "registryName": {
+            "value": "containerRegistry"
+        },
+        "linuxAdminUsername": {
+            "value": "aksAdminUser"
+        },
+        "servicePrincipalID": {
+            "value": "8cdd295d-b020-42b7-8254-9c3798352971"
+        },
+        "servicePrincipalPassword": {
+            "value": "naD.jI4JXH4.xW~7ZpDOlv5JuysHpvgk4K"
+        },
+        "agentPoolName": {
+            "value": "projectpool"
+        },
+        "sshKey": {
+            "value": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDCTPqpWugqi8VHyZs893xsUR95A4qMiwq+4VwP4hhWCPm3qrIY9VCN5BxoEm0jl9kaRvylB1W1i5heahM9076RAhXFNOb5wvW8pv5lwRP7Ty7Rmhc0qt8U2Myu3m2+aAZz0xK7QTDvySmcFVLFYxE2rUPtXiC2brdoVULVc1iU9+6id3b6syUPHClDpRXUY3GP0DNqdDxRiALPKHgFV/ZsS5YkUzl9TskiF4d1ABP3/TSGkoyDWPrkI9nqmplHBI3ZBFKguif+cPXayf71TslO02mGd7JeJR25AO6roFbsB7dGZaPRO9K9Sz9JGG5Wpr/148hYj1vnpDHTjYYijqY9 karlis@cc-13726973-758487fd56-g9prt"
+        }
+    }
+}
